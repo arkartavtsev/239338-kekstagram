@@ -1,6 +1,11 @@
 'use strict';
 
 
+var KeyCodes = {
+  ENTER: 13,
+  ESC: 27
+};
+
 var PhotosProperties = {
   QUANTITY: 25,
   LIKES: {
@@ -40,6 +45,9 @@ var getRandomItem = function (arr) {
 };
 
 
+// генерация комментариев и фотографий
+
+
 var generateComments = function (phrasesList, max) {
   var comments = [];
   var possiblePhrases = phrasesList.slice();
@@ -47,8 +55,10 @@ var generateComments = function (phrasesList, max) {
   for (var i = 0; i < getRandomNum(1, max); i++) {
     var index = getRandomNum(0, possiblePhrases.length - 1);
 
-    comments.push(possiblePhrases[index]);
-    possiblePhrases.splice(index, 1);
+    if (index >= 0) {
+      comments.push(possiblePhrases[index]);
+      possiblePhrases.splice(index, 1);
+    }
   }
 
   return comments;
@@ -68,6 +78,10 @@ var generatePhotos = function (properties) {
 
   return photos;
 };
+
+
+// выгрузка фотографий на страницу
+
 
 var createAnotherPhoto = function (template, photo) {
   var anotherPhoto = template.cloneNode(true);
@@ -96,6 +110,13 @@ var renderPhotos = function (photos) {
   var photosContainer = document.querySelector('.pictures');
   photosContainer.appendChild(photosToRender);
 };
+
+
+var photos = generatePhotos(PhotosProperties);
+renderPhotos(photos);
+
+
+// выгрузка комментариев в попап
 
 
 var createAnotherComment = function (template, comment) {
@@ -129,29 +150,62 @@ var renderComments = function (comments) {
   commentsContainer.appendChild(commentsToRender);
 };
 
-var showPopup = function (photo) {
-  renderComments(photo.comments);
 
-  var photoContainer = document.querySelector('.big-picture');
+// открытие/закрытие попапа
+
+
+var renderPopup = function (photo) {
   photoContainer.querySelector('.big-picture__img img').src = photo.url;
 
   var photoSocial = photoContainer.querySelector('.big-picture__social');
   photoSocial.querySelector('.social__caption').textContent = photo.description;
   photoSocial.querySelector('.likes-count').textContent = photo.likes;
   photoSocial.querySelector('.comments-count').textContent = photo.comments.length;
+
   photoSocial.querySelector('.social__comment-count').classList.add('visually-hidden');
   photoSocial.querySelector('.social__loadmore').classList.add('visually-hidden');
+};
+
+
+var pageBody = document.querySelector('body');
+var photoLinks = pageBody.querySelectorAll('.picture__link');
+
+var photoContainer = pageBody.querySelector('.big-picture');
+var popupCloseBtn = photoContainer.querySelector('.big-picture__cancel');
+
+
+var onPopupOpen = function (photo) {
+  renderComments(photo.comments);
+  renderPopup(photo);
 
   photoContainer.classList.remove('hidden');
+  pageBody.classList.add('modal-open');
+
+  document.addEventListener('keydown', onEscPress);
+};
+
+var onPopupClose = function () {
+  pageBody.classList.remove('modal-open');
+  photoContainer.classList.add('hidden');
+
+  document.removeEventListener('keydown', onEscPress);
+};
+
+var onEscPress = function (evt) {
+  if (evt.keyCode === KeyCodes.ESC) {
+    onPopupClose();
+  }
+};
+
+var onPhotoClick = function (currentPhoto, photoData) {
+  currentPhoto.addEventListener('click', function () {
+    onPopupOpen(photoData);
+  });
 };
 
 
-var showPhotos = function () {
-  var photos = generatePhotos(PhotosProperties);
+for (var i = 0; i < photoLinks.length; i++) {
+  onPhotoClick(photoLinks[i], photos[i]);
+}
 
-  renderPhotos(photos);
-  showPopup(photos[0]);
-};
-
-
-showPhotos();
+popupCloseBtn.addEventListener('click', onPopupClose);
