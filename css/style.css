@@ -816,6 +816,10 @@ main {
 
 /* Комментарий */
 
+.invalid-field {
+  border: 2px solid red;
+}
+
 .text {
   margin: 0;
   padding: 0;
