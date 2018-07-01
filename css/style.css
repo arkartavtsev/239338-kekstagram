@@ -631,6 +631,7 @@ main {
   height: 600px;
 
   background-color: #ffffff;
+  user-select: none;
 }
 
 .img-upload__preview img {
@@ -662,6 +663,8 @@ main {
   -webkit-transform: translateX(-50%);
       -ms-transform: translateX(-50%);
           transform: translateX(-50%);
+
+  user-select: none;
 }
 
 .scale__value {
@@ -686,6 +689,7 @@ main {
 }
 
 .scale__pin {
+  z-index: 2;
   position: absolute;
   top: 50%;
   left: 20%;
@@ -804,8 +808,8 @@ main {
 }
 
 .effects__preview--phobos {
-  -webkit-filter: blur(5px);
-          filter: blur(5px);
+  -webkit-filter: blur(3px);
+          filter: blur(3px);
 }
 
 .effects__preview--heat {

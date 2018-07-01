@@ -258,7 +258,12 @@ var uploadPreview = uploadPopup.querySelector('.img-upload__preview');
 var imgToUpload = uploadPreview.querySelector('img');
 var filtersContainer = uploadPopup.querySelector('.effects__list');
 var initialFilter = uploadPopup.querySelector('#effect-none');
+
 var effectIntensity = uploadPopup.querySelector('.img-upload__scale');
+var effectIntensityField = effectIntensity.querySelector('.scale__value');
+var effectIntensityLine = effectIntensity.querySelector('.scale__line');
+var effectIntensityPin = effectIntensity.querySelector('.scale__pin');
+var effectIntensityLevel = effectIntensity.querySelector('.scale__level');
 
 
 var setPhotoSize = function (sizeValue) {
@@ -283,6 +288,7 @@ var onPhotoScale = function (evt) {
 var resetPreview = function () {
   uploadField.value = '';
   imgToUpload.className = '';
+  imgToUpload.style = '';
 };
 
 
@@ -318,31 +324,76 @@ var onUploadEscPress = function (evt) {
 };
 
 
+var changeFilterIntensity = function () {
+  var effectNameToStyle = {
+    'effects__preview--chrome': 'filter: grayscale(' + effectIntensityField.value / 100 + ');',
+    'effects__preview--sepia': 'filter: sepia(' + effectIntensityField.value / 100 + ');',
+    'effects__preview--marvin': 'filter: invert(' + effectIntensityField.value + '%);',
+    'effects__preview--phobos': 'filter: blur(' + effectIntensityField.value * 0.03 + 'px);',
+    'effects__preview--heat': 'filter: brightness(' + effectIntensityField.value * 0.03 + ');'
+  };
+
+  imgToUpload.style = effectNameToStyle[imgToUpload.className] || '';
+};
+
+var changeFilterScale = function (value) {
+  effectIntensityPin.style.left = value + '%';
+  effectIntensityLevel.style.width = value + '%';
+  effectIntensityField.value = value;
+
+  changeFilterIntensity();
+};
+
 var onFilterChange = function (evt) {
   var target = evt.target;
 
   if (target === filtersContainer) {
     return;
   }
-
   while (target.parentElement !== filtersContainer) {
     target = target.parentElement;
   }
 
-  imgToUpload.className = '';
-  imgToUpload.classList.add('effects__preview--' + target.dataset.effectName);
+  var currentFilter = imgToUpload.className;
+  imgToUpload.className = 'effects__preview--' + target.dataset.effectName;
 
   if (target.dataset.effectName === 'none') {
     effectIntensity.classList.add('hidden');
-  } else {
+    changeFilterScale(0);
+  } else if (currentFilter !== imgToUpload.className) {
     effectIntensity.classList.remove('hidden');
+    changeFilterScale(100);
   }
+};
+
+var onFilterPinMouseDown = function (downEvt) {
+  var initialPosition = downEvt.clientX;
+
+  var onFilterPinMouseMove = function (moveEvt) {
+    var shift = initialPosition - moveEvt.clientX;
+
+    var newPosition = Math.round((effectIntensityPin.offsetLeft - shift) / effectIntensityLine.offsetWidth * 100);
+
+    if (newPosition >= 0 && newPosition <= 100) {
+      changeFilterScale(newPosition);
+    }
+
+    initialPosition = moveEvt.clientX;
+  };
+
+  var onFilterPinMouseUp = function () {
+    document.removeEventListener('mousemove', onFilterPinMouseMove);
+    document.removeEventListener('mouseup', onFilterPinMouseUp);
+  };
+
+  document.addEventListener('mousemove', onFilterPinMouseMove);
+  document.addEventListener('mouseup', onFilterPinMouseUp);
 };
 
 
 var isBadTagsSeparation = function (arr) {
   for (var i = 0; i < arr.length; i++) {
-    if (arr[i].indexOf('#', 1) !== -1 || arr[i] === '') {
+    if (arr[i] !== '' && (arr[i].indexOf('#', 1) !== -1 || arr[i] === '')) {
       return true;
     }
   }
@@ -352,7 +403,7 @@ var isBadTagsSeparation = function (arr) {
 
 var isBadTagFormat = function (arr) {
   for (var i = 0; i < arr.length; i++) {
-    if (arr[i].charAt(0) !== '#' || arr[i].length === 1) {
+    if (arr[i] !== '' && (arr[i].charAt(0) !== '#' || arr[i].length === 1)) {
       return true;
     }
   }
@@ -412,5 +463,6 @@ decreaseBtn.addEventListener('click', onPhotoScale);
 increaseBtn.addEventListener('click', onPhotoScale);
 
 filtersContainer.addEventListener('click', onFilterChange);
+effectIntensityPin.addEventListener('mousedown', onFilterPinMouseDown);
 
 uploader.addEventListener('input', onTagsFieldValidate);
