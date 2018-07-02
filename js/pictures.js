@@ -13,6 +13,11 @@ var ResizeValues = {
   STEP: 25
 };
 
+var Scale = {
+  MIN: 0,
+  MAX: 100
+};
+
 var HastagsValidity = {
   MAX_QUANTITY: 5,
   MAX_LENGTH: 20
@@ -324,16 +329,21 @@ var onUploadEscPress = function (evt) {
 };
 
 
-var changeFilterIntensity = function () {
-  var effectNameToStyle = {
-    'effects__preview--chrome': 'filter: grayscale(' + effectIntensityField.value / 100 + ');',
-    'effects__preview--sepia': 'filter: sepia(' + effectIntensityField.value / 100 + ');',
-    'effects__preview--marvin': 'filter: invert(' + effectIntensityField.value + '%);',
-    'effects__preview--phobos': 'filter: blur(' + effectIntensityField.value * 0.03 + 'px);',
-    'effects__preview--heat': 'filter: brightness(' + effectIntensityField.value * 0.03 + ');'
+var changeFilterIntensity = function (value) {
+  var ConversionCoefficient = {
+    TO_ONE: 0.01,
+    TO_THREE: 0.03
   };
 
-  imgToUpload.style = effectNameToStyle[imgToUpload.className] || '';
+  var effectNameToStyle = {
+    'chrome': 'filter: grayscale(' + value * ConversionCoefficient.TO_ONE + ');',
+    'sepia': 'filter: sepia(' + value * ConversionCoefficient.TO_ONE + ');',
+    'marvin': 'filter: invert(' + value + '%);',
+    'phobos': 'filter: blur(' + value * ConversionCoefficient.TO_THREE + 'px);',
+    'heat': 'filter: brightness(' + value * ConversionCoefficient.TO_THREE + ');'
+  };
+
+  imgToUpload.style = effectNameToStyle[imgToUpload.dataset.currentEffect] || '';
 };
 
 var changeFilterScale = function (value) {
@@ -341,7 +351,7 @@ var changeFilterScale = function (value) {
   effectIntensityLevel.style.width = value + '%';
   effectIntensityField.value = value;
 
-  changeFilterIntensity();
+  changeFilterIntensity(effectIntensityField.value);
 };
 
 var onFilterChange = function (evt) {
@@ -354,31 +364,40 @@ var onFilterChange = function (evt) {
     target = target.parentElement;
   }
 
-  var currentFilter = imgToUpload.className;
+  var currentFilter = imgToUpload.dataset.currentEffect;
   imgToUpload.className = 'effects__preview--' + target.dataset.effectName;
+  imgToUpload.dataset.currentEffect = target.dataset.effectName;
 
   if (target.dataset.effectName === 'none') {
     effectIntensity.classList.add('hidden');
-    changeFilterScale(0);
-  } else if (currentFilter !== imgToUpload.className) {
+    changeFilterScale(Scale.MIN);
+  } else if (currentFilter !== imgToUpload.dataset.currentEffect) {
     effectIntensity.classList.remove('hidden');
-    changeFilterScale(100);
+    changeFilterScale(Scale.MAX);
   }
 };
 
 var onFilterPinMouseDown = function (downEvt) {
-  var initialPosition = downEvt.clientX;
+  var cursorPosition = downEvt.clientX;
 
   var onFilterPinMouseMove = function (moveEvt) {
-    var shift = initialPosition - moveEvt.clientX;
+    var scaleCoords = {
+      left: effectIntensityLine.getBoundingClientRect().left,
+      right: effectIntensityLine.getBoundingClientRect().right
+    };
 
-    var newPosition = Math.round((effectIntensityPin.offsetLeft - shift) / effectIntensityLine.offsetWidth * 100);
+    var pinPosition;
 
-    if (newPosition >= 0 && newPosition <= 100) {
-      changeFilterScale(newPosition);
+    cursorPosition = moveEvt.clientX;
+
+    if (cursorPosition < scaleCoords.left) {
+      pinPosition = Scale.MIN;
+    } else if (cursorPosition > scaleCoords.right) {
+      pinPosition = Scale.MAX;
+    } else {
+      pinPosition = Math.round((cursorPosition - scaleCoords.left) / effectIntensityLine.offsetWidth * 100);
     }
-
-    initialPosition = moveEvt.clientX;
+    changeFilterScale(pinPosition);
   };
 
   var onFilterPinMouseUp = function () {
