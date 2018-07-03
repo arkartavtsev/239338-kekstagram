@@ -13,6 +13,11 @@ var ResizeValues = {
   STEP: 25
 };
 
+var Scale = {
+  MIN: 0,
+  MAX: 100
+};
+
 var HastagsValidity = {
   MAX_QUANTITY: 5,
   MAX_LENGTH: 20
@@ -258,7 +263,12 @@ var uploadPreview = uploadPopup.querySelector('.img-upload__preview');
 var imgToUpload = uploadPreview.querySelector('img');
 var filtersContainer = uploadPopup.querySelector('.effects__list');
 var initialFilter = uploadPopup.querySelector('#effect-none');
+
 var effectIntensity = uploadPopup.querySelector('.img-upload__scale');
+var effectIntensityField = effectIntensity.querySelector('.scale__value');
+var effectIntensityLine = effectIntensity.querySelector('.scale__line');
+var effectIntensityPin = effectIntensity.querySelector('.scale__pin');
+var effectIntensityLevel = effectIntensity.querySelector('.scale__level');
 
 
 var setPhotoSize = function (sizeValue) {
@@ -283,6 +293,7 @@ var onPhotoScale = function (evt) {
 var resetPreview = function () {
   uploadField.value = '';
   imgToUpload.className = '';
+  imgToUpload.style = '';
 };
 
 
@@ -318,31 +329,90 @@ var onUploadEscPress = function (evt) {
 };
 
 
+var changeFilterIntensity = function (value) {
+  var ConversionCoefficient = {
+    TO_ONE: 0.01,
+    TO_THREE: 0.03
+  };
+
+  var effectNameToStyle = {
+    'chrome': 'filter: grayscale(' + value * ConversionCoefficient.TO_ONE + ');',
+    'sepia': 'filter: sepia(' + value * ConversionCoefficient.TO_ONE + ');',
+    'marvin': 'filter: invert(' + value + '%);',
+    'phobos': 'filter: blur(' + value * ConversionCoefficient.TO_THREE + 'px);',
+    'heat': 'filter: brightness(' + value * ConversionCoefficient.TO_THREE + ');'
+  };
+
+  imgToUpload.style = effectNameToStyle[imgToUpload.dataset.currentEffect] || '';
+};
+
+var changeFilterScale = function (value) {
+  effectIntensityPin.style.left = value + '%';
+  effectIntensityLevel.style.width = value + '%';
+  effectIntensityField.value = value;
+
+  changeFilterIntensity(effectIntensityField.value);
+};
+
 var onFilterChange = function (evt) {
   var target = evt.target;
 
   if (target === filtersContainer) {
     return;
   }
-
   while (target.parentElement !== filtersContainer) {
     target = target.parentElement;
   }
 
-  imgToUpload.className = '';
-  imgToUpload.classList.add('effects__preview--' + target.dataset.effectName);
+  var currentFilter = imgToUpload.dataset.currentEffect;
+  imgToUpload.className = 'effects__preview--' + target.dataset.effectName;
+  imgToUpload.dataset.currentEffect = target.dataset.effectName;
 
   if (target.dataset.effectName === 'none') {
     effectIntensity.classList.add('hidden');
-  } else {
+    changeFilterScale(Scale.MIN);
+  } else if (currentFilter !== imgToUpload.dataset.currentEffect) {
     effectIntensity.classList.remove('hidden');
+    changeFilterScale(Scale.MAX);
   }
+};
+
+var onFilterPinMouseDown = function (downEvt) {
+  var cursorPosition = downEvt.clientX;
+
+  var onFilterPinMouseMove = function (moveEvt) {
+    var scaleCoords = {
+      left: effectIntensityLine.getBoundingClientRect().left,
+      right: effectIntensityLine.getBoundingClientRect().right
+    };
+
+    var pinPosition;
+
+    cursorPosition = moveEvt.clientX;
+
+    if (cursorPosition < scaleCoords.left) {
+      pinPosition = Scale.MIN;
+    } else if (cursorPosition > scaleCoords.right) {
+      pinPosition = Scale.MAX;
+    } else {
+      pinPosition = Math.round((cursorPosition - scaleCoords.left) / effectIntensityLine.offsetWidth * 100);
+    }
+    changeFilterScale(pinPosition);
+  };
+
+  var onFilterPinMouseUp = function () {
+    document.removeEventListener('mousemove', onFilterPinMouseMove);
+    document.removeEventListener('mouseup', onFilterPinMouseUp);
+  };
+
+  document.addEventListener('mousemove', onFilterPinMouseMove);
+  document.addEventListener('mouseup', onFilterPinMouseUp);
 };
 
 
 var isBadTagsSeparation = function (arr) {
   for (var i = 0; i < arr.length; i++) {
-    if (arr[i].indexOf('#', 1) !== -1 || arr[i] === '') {
+    if (arr[i] !== '' && (arr[i].indexOf('#', 1) !== -1 || arr[i] === '')) {
       return true;
     }
   }
@@ -352,7 +422,7 @@ var isBadTagsSeparation = function (arr) {
 
 var isBadTagFormat = function (arr) {
   for (var i = 0; i < arr.length; i++) {
-    if (arr[i].charAt(0) !== '#' || arr[i].length === 1) {
+    if (arr[i] !== '' && (arr[i].charAt(0) !== '#' || arr[i].length === 1)) {
       return true;
     }
   }
@@ -412,5 +482,6 @@ decreaseBtn.addEventListener('click', onPhotoScale);
 increaseBtn.addEventListener('click', onPhotoScale);
 
 filtersContainer.addEventListener('click', onFilterChange);
+effectIntensityPin.addEventListener('mousedown', onFilterPinMouseDown);
 
 uploader.addEventListener('input', onTagsFieldValidate);
