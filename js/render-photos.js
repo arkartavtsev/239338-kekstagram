@@ -16,8 +16,7 @@
     return anotherPhoto;
   };
 
-
-  window.renderPhotos = function (container, photos) {
+  var renderPhotos = function (container, photos) {
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < photos.length; i++) {
@@ -26,4 +25,7 @@
 
     container.appendChild(fragment);
   };
+
+
+  window.renderPhotos = renderPhotos;
 })();

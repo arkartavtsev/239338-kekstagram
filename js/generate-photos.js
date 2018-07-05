@@ -66,7 +66,7 @@
   };
 
 
-  window.generatePhotos = function () {
+  var generatePhotos = function () {
     var photos = [];
 
     for (var i = 0; i < PhotosProperties.QUANTITY; i++) {
@@ -81,4 +81,7 @@
 
     return photos;
   };
+
+
+  window.generatePhotos = generatePhotos;
 })();

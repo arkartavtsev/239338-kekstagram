@@ -155,7 +155,6 @@
     increaseBtn.addEventListener('click', onPhotoScale);
     filtersContainer.addEventListener('click', onFilterChange);
     effectIntensityPin.addEventListener('mousedown', onFilterPinMouseDown);
-    uploader.addEventListener('input', window.onTagsValidate);
   };
 
   var removePopupListeners = function () {
@@ -164,7 +163,6 @@
     increaseBtn.removeEventListener('click', onPhotoScale);
     filtersContainer.removeEventListener('click', onFilterChange);
     effectIntensityPin.removeEventListener('mousedown', onFilterPinMouseDown);
-    uploader.removeEventListener('input', window.onTagsValidate);
   };
 
 
@@ -193,5 +191,9 @@
 
   closeBtn.addEventListener('click', function () {
     closeUploadPopup();
+  });
+
+  uploader.addEventListener('input', function () {
+    window.validateTags();
   });
 })();

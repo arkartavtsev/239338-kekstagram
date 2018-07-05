@@ -55,7 +55,7 @@
   };
 
 
-  window.onTagsValidate = function () {
+  var validateTags = function () {
     var tags = tagsField.value.trim().toLowerCase().split(' ');
 
     if (isBadTagsSeparation(tags)) {
@@ -77,4 +77,7 @@
       tagsField.classList.add('invalid-field');
     }
   };
+
+
+  window.validateTags = validateTags;
 })();

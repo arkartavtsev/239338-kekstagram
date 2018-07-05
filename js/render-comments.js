@@ -21,7 +21,7 @@
   };
 
 
-  window.renderComments = function (comments) {
+  var renderComments = function (comments) {
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < comments.length; i++) {
@@ -31,4 +31,7 @@
     commentsList.innerHTML = '';
     commentsList.appendChild(fragment);
   };
+
+
+  window.renderComments = renderComments;
 })();
