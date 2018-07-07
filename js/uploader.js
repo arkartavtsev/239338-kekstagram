@@ -18,6 +18,7 @@
   var uploader = document.querySelector('.img-upload__form');
   var uploadField = uploader.querySelector('.img-upload__input');
   var uploadPopup = uploader.querySelector('.img-upload__overlay');
+  var uploadBtn = uploader.querySelector('.img-upload__submit');
   var closeBtn = uploadPopup.querySelector('.img-upload__cancel');
 
   var tagsField = uploadPopup.querySelector('.text__hashtags');
@@ -184,6 +185,57 @@
     removePopupListeners();
   };
 
+
+  var onFormSendSuccess = function () {
+    closeUploadPopup();
+    uploadBtn.disabled = false;
+
+    uploader.removeEventListener('submit', onFormSend);
+  };
+
+  var onFormSendError = function (errorMessage) {
+    var errorContainer = document.querySelector('.img-upload__message--error');
+    var errorText = errorContainer.querySelector('.error__message');
+    var tryAgainBtn = errorContainer.querySelector('.try-again-link');
+    var loadNewBtn = errorContainer.querySelector('.new-file-link');
+
+    var onTryAgainBtnClick = function (evt) {
+      evt.preventDefault();
+
+      uploadBtn.disabled = false;
+      errorContainer.classList.add('hidden');
+
+      tryAgainBtn.removeEventListener('click', onTryAgainBtnClick);
+      loadNewBtn.removeEventListener('click', onLoadNewBtnClick);
+    };
+
+    var onLoadNewBtnClick = function (evt) {
+      evt.preventDefault();
+
+      closeUploadPopup();
+      uploadBtn.disabled = false;
+      errorContainer.classList.add('hidden');
+
+      tryAgainBtn.removeEventListener('click', onTryAgainBtnClick);
+      loadNewBtn.removeEventListener('click', onLoadNewBtnClick);
+    };
+
+    errorText.textContent = 'Ошибка загрузки файла. ' + errorMessage;
+    errorContainer.classList.remove('hidden');
+
+    tryAgainBtn.addEventListener('click', onTryAgainBtnClick);
+    loadNewBtn.addEventListener('click', onLoadNewBtnClick);
+  };
+
+  var onFormSend = function (evt) {
+    evt.preventDefault();
+    uploadBtn.disabled = true;
+
+    window.backend.save(new FormData(uploader), onFormSendSuccess, onFormSendError);
+  };
+
+
+  uploader.addEventListener('submit', onFormSend);
 
   uploadField.addEventListener('change', function () {
     openUploadPopup();
