@@ -14,30 +14,21 @@
   ];
 
 
-  var getRandomNum = function (min, max) {
-    return Math.floor(Math.random() * (max + 1 - min)) + min;
-  };
-
-  var getRandomItem = function (arr) {
-    return arr[getRandomNum(0, arr.length - 1)];
-  };
-
-
   var generateDescription = function (photo) {
-    photo.description = getRandomItem(DESCRIPTIONS);
+    photo.description = window.util.getRandomItem(DESCRIPTIONS);
   };
 
-  var generateAvatarsUrls = function (photo) {
-    photo.commentsAvatarsUrls = [];
+  var generateAvatars = function (photo) {
+    photo.commentsAvatars = [];
 
     for (var i = 0; i < photo.comments.length; i++) {
-      photo.commentsAvatarsUrls[i] = 'img/avatar-' + getRandomNum(1, AVATARS_COUNT) + '.svg';
+      photo.commentsAvatars[i] = 'img/avatar-' + window.util.getRandomNum(1, AVATARS_COUNT) + '.svg';
     }
   };
 
 
   window.data = {
     generateDescription: generateDescription,
-    generateAvatarsUrls: generateAvatarsUrls
+    generateAvatars: generateAvatars
   };
 })();

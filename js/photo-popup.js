@@ -10,10 +10,8 @@
   var description = photoPopup.querySelector('.social__caption');
   var likesCount = photoPopup.querySelector('.likes-count');
 
-  var commentsCounter = photoPopup.querySelector('.social__comment-count');
-  var commentsQuantity = commentsCounter.querySelector('.comments-count');
+  var commentsQuantity = photoPopup.querySelector('.comments-count');
   var commentsList = photoPopup.querySelector('.social__comments');
-
   var loadMoreBtn = photoPopup.querySelector('.social__loadmore');
 
 
@@ -22,6 +20,7 @@
 
 
   var renderPopupContent = function (photo) {
+    commentsList.innerHTML = '';
     window.renderComments(comments, avatars);
 
     picture.src = photo.url;
@@ -30,39 +29,37 @@
     commentsQuantity.textContent = photo.comments.length;
   };
 
-
   var onPopupEscPress = function (evt) {
-    window.util.isEscEvent(evt, onPopupClose);
+    window.util.isEscEvent(evt, closePopup);
   };
 
 
   var openPopup = function (photo) {
     comments = photo.comments.slice();
-    avatars = photo.commentsAvatarsUrls.slice();
+    avatars = photo.commentsAvatars.slice();
 
-    commentsList.innerHTML = '';
-    loadMoreBtn.classList.remove('hidden');
     renderPopupContent(photo);
 
+    loadMoreBtn.classList.remove('hidden');
     photoPopup.classList.remove('hidden');
     pageBody.classList.add('modal-open');
 
     document.addEventListener('keydown', onPopupEscPress);
-    closeBtn.addEventListener('click', onPopupClose);
+    closeBtn.addEventListener('click', closePopup);
   };
 
-  var onPopupClose = function () {
+  var closePopup = function () {
     pageBody.classList.remove('modal-open');
     photoPopup.classList.add('hidden');
 
     document.removeEventListener('keydown', onPopupEscPress);
-    closeBtn.removeEventListener('click', onPopupClose);
+    closeBtn.removeEventListener('click', closePopup);
   };
 
 
   window.photoPopup = {
     open: openPopup,
-    close: onPopupClose
+    close: closePopup
   };
 
 

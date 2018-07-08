@@ -45,7 +45,7 @@
 
                   <fieldset class="img-upload__resize resize">
                     <button type="button" class="resize__control resize__control--minus">Уменьшить</button>
-                    <input type="text" class="resize__control resize__control--value" value="55%" title="Image Scale" name="scale" readonly>
+                    <input type="text" class="resize__control resize__control--value" value="100%" title="Image Scale" name="scale" readonly>
                     <button type="button" class="resize__control resize__control--plus">Увеличить</button>
                   </fieldset>
 
@@ -67,7 +67,7 @@
                 <fieldset class="img-upload__effects effects">
                   <ul class="effects__list">
                     <li class="effects__item" data-effect-name="none">
-                      <input type="radio" class="effects__radio visually-hidden" name="effect" id="effect-none" value="none">
+                      <input type="radio" class="effects__radio visually-hidden" name="effect" id="effect-none" value="none" checked>
                       <label for="effect-none" class="effects__label">
                         <span class="effects__preview effects__preview--none">Превью фото без эффекта</span>
                         Оригинал
@@ -102,7 +102,7 @@
                       </label>
                     </li>
                     <li class="effects__item" data-effect-name="heat">
-                      <input type="radio" class="effects__radio visually-hidden" name="effect" id="effect-heat" value="heat" checked>
+                      <input type="radio" class="effects__radio visually-hidden" name="effect" id="effect-heat" value="heat">
                       <label for="effect-heat" class="effects__label">
                         <span class="effects__preview effects__preview--heat">Превью эффекта Зной</span>
                         Зной
@@ -221,11 +221,15 @@
   <script src="js/util.js"></script>
   <script src="js/data.js"></script>
   <script src="js/backend.js"></script>
-  <script src="js/render-comments.js"></script>
-  <script src="js/photo-popup.js"></script>
+
   <script src="js/render-photos.js"></script>
   <script src="js/gallery.js"></script>
-  <script src="js/validate-tags.js"></script>
+
+  <script src="js/render-comments.js"></script>
+  <script src="js/photo-popup.js"></script>
+
+  <script src="js/photo-editor.js"></script>
+  <script src="js/validation.js"></script>
   <script src="js/uploader.js"></script>
 
 </body>
