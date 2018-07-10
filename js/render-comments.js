@@ -2,18 +2,25 @@
 
 
 (function () {
-  var commentsList = document.querySelector('.social__comments');
+  var COMMENTS_PER_PAGE = 5;
+
+  var renderedCommentsCount = 0;
+
+
   var commentTemplate = document.querySelector('#picture').content.querySelector('.social__comment');
+  var commentsCurrentCount = document.querySelector('.comments-current');
+  var commentsList = document.querySelector('.social__comments');
+  var loadMoreBtn = document.querySelector('.social__loadmore');
 
 
-  var createAnotherComment = function (template, comment) {
+  var createAnotherComment = function (template, commentText, avatarUrl) {
     var anotherComment = template.cloneNode(true);
 
-    anotherComment.querySelector('.social__picture').src = comment.avatarUrl;
+    anotherComment.querySelector('.social__picture').src = avatarUrl;
 
     var text = document.createElement('p');
     text.classList.add('social__text');
-    text.textContent = comment.text;
+    text.textContent = commentText;
 
     anotherComment.appendChild(text);
 
@@ -21,15 +28,33 @@
   };
 
 
-  var renderComments = function (comments) {
+  var renderComments = function (attributes, isInitial) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < comments.length; i++) {
-      fragment.appendChild(createAnotherComment(commentTemplate, comments[i]));
+    var lastIndex = COMMENTS_PER_PAGE;
+    if (attributes.comments.length < COMMENTS_PER_PAGE) {
+      lastIndex = attributes.comments.length;
     }
 
-    commentsList.innerHTML = '';
+    if (isInitial) {
+      renderedCommentsCount = 0;
+    }
+
+    renderedCommentsCount += lastIndex;
+    commentsCurrentCount.textContent = renderedCommentsCount;
+
+    for (var i = 0; i < lastIndex; i++) {
+      fragment.appendChild(createAnotherComment(commentTemplate, attributes.comments[i], attributes.avatars[i]));
+    }
+
+    attributes.comments.splice(0, lastIndex);
+    attributes.avatars.splice(0, lastIndex);
+
     commentsList.appendChild(fragment);
+
+    if (!attributes.comments.length) {
+      loadMoreBtn.classList.add('hidden');
+    }
   };
 
 

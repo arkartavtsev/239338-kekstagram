@@ -11,7 +11,7 @@
     anotherPhoto.querySelector('.picture__img').src = photo.url;
     anotherPhoto.querySelector('.picture__stat--comments').textContent = photo.comments.length;
     anotherPhoto.querySelector('.picture__stat--likes').textContent = photo.likes;
-    anotherPhoto.dataset.id = photo.index;
+    anotherPhoto.dataset.id = photo.id;
 
     return anotherPhoto;
   };

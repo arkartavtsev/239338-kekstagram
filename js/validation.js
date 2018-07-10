@@ -7,7 +7,9 @@
     LENGTH: 20
   };
 
-  var tagsField = document.querySelector('.text__hashtags');
+
+  var uploader = document.querySelector('.img-upload__form');
+  var tagsField = uploader.querySelector('.text__hashtags');
 
 
   var isBadTagsSeparation = function (arr) {
@@ -55,7 +57,7 @@
   };
 
 
-  var validateTags = function () {
+  var onTagsFieldInput = function () {
     var tags = tagsField.value.trim().toLowerCase().split(' ');
 
     if (isBadTagsSeparation(tags)) {
@@ -79,5 +81,5 @@
   };
 
 
-  window.validateTags = validateTags;
+  uploader.addEventListener('input', onTagsFieldInput);
 })();
