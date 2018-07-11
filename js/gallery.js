@@ -2,11 +2,18 @@
 
 
 (function () {
-  // отрисовка фотографий на странице
-
+  var sortFilters = document.querySelector('.img-filters');
+  var sortBtnPopular = sortFilters.querySelector('#filter-popular');
+  var sortBtnNew = sortFilters.querySelector('#filter-new');
+  var sortBtnDiscussed = sortFilters.querySelector('#filter-discussed');
+  var activeSortBtn = sortFilters.querySelector('.img-filters__button--active');
 
   var gallery = document.querySelector('.pictures');
+
   var photos = [];
+
+
+  // отрисовка фотографий на странице
 
 
   var preparePhotos = function (array) {
@@ -23,6 +30,8 @@
 
     preparePhotos(photos);
     window.renderPhotos(gallery, photos);
+
+    sortFilters.classList.remove('img-filters--inactive');
   };
 
   var showError = function (errorMessage) {
@@ -41,6 +50,37 @@
 
 
   window.backend.load(createPhotos, showError);
+
+
+  // сортировка
+
+
+  var changeSortType = function (evt, callback) {
+    evt.preventDefault();
+
+    if (evt.target !== activeSortBtn) {
+      activeSortBtn.classList.remove('img-filters__button--active');
+      evt.target.classList.add('img-filters__button--active');
+      activeSortBtn = evt.target;
+
+      window.removeDebounce(function () {
+        callback(gallery, photos);
+      });
+    }
+  };
+
+
+  sortBtnPopular.addEventListener('click', function (evt) {
+    changeSortType(evt, window.sort.showPopularPhotos);
+  });
+
+  sortBtnNew.addEventListener('click', function (evt) {
+    changeSortType(evt, window.sort.showNewPhotos);
+  });
+
+  sortBtnDiscussed.addEventListener('click', function (evt) {
+    changeSortType(evt, window.sort.showDiscussedPhotos);
+  });
 
 
   // открытие попапа с полноразмерным фото

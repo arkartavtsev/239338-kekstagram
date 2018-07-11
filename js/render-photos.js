@@ -5,6 +5,17 @@
   var photoTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
 
 
+  var removePhoto = function (item) {
+    item.remove();
+  };
+
+  var clearGallery = function () {
+    var existingPhotos = document.querySelectorAll('.picture__link');
+
+    existingPhotos.forEach(removePhoto);
+  };
+
+
   var createAnotherPhoto = function (template, photo) {
     var anotherPhoto = template.cloneNode(true);
 
@@ -16,6 +27,7 @@
     return anotherPhoto;
   };
 
+
   var renderPhotos = function (container, photos) {
     var fragment = document.createDocumentFragment();
 
@@ -23,6 +35,7 @@
       fragment.appendChild(createAnotherPhoto(photoTemplate, photos[i]));
     }
 
+    clearGallery();
     container.appendChild(fragment);
   };
 

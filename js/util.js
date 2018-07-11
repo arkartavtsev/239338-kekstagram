@@ -20,6 +20,22 @@
 
     getRandomItem: function (arr) {
       return arr[this.getRandomNum(0, arr.length - 1)];
+    },
+
+    getUniqueItems: function (arr, quantity) {
+      var uniqueItems = [];
+      var buffer = arr.slice();
+
+      for (var i = 0; i < quantity; i++) {
+        var index = this.getRandomNum(0, buffer.length - 1);
+
+        if (index >= 0) {
+          uniqueItems.push(buffer[index]);
+          buffer.splice(index, 1);
+        }
+      }
+
+      return uniqueItems;
     }
   };
 })();
