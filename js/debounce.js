@@ -7,7 +7,7 @@
   var lastTimeout;
 
 
-  var removeDebounce = function (callback) {
+  var debounce = function (callback) {
     if (lastTimeout) {
       clearTimeout(lastTimeout);
     }
@@ -16,5 +16,5 @@
   };
 
 
-  window.removeDebounce = removeDebounce;
+  window.debounce = debounce;
 })();

@@ -63,7 +63,7 @@
       evt.target.classList.add('img-filters__button--active');
       activeSortBtn = evt.target;
 
-      window.removeDebounce(function () {
+      window.debounce(function () {
         callback(gallery, photos);
       });
     }
