@@ -2,7 +2,6 @@
 
 
 (function () {
-  var fragment = document.createDocumentFragment();
   var photoTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
 
 
@@ -16,7 +15,8 @@
     existingPhotos.forEach(removePhoto);
   };
 
-  var addToFragment = function (photo) {
+
+  var createAnotherPhoto = function (template, photo) {
     var anotherPhoto = photoTemplate.cloneNode(true);
 
     anotherPhoto.querySelector('.picture__img').src = photo.url;
@@ -24,15 +24,20 @@
     anotherPhoto.querySelector('.picture__stat--likes').textContent = photo.likes;
     anotherPhoto.dataset.id = photo.id;
 
-    fragment.appendChild(anotherPhoto);
+    return anotherPhoto;
   };
 
 
   var renderPhotos = function (container, photos) {
-    photos.forEach(addToFragment);
+    var addToFragment = function (fragment, photo) {
+      fragment.appendChild(createAnotherPhoto(photoTemplate, photo));
+      return fragment;
+    };
+
+    var photosToRender = photos.reduce(addToFragment, document.createDocumentFragment());
 
     clearGallery();
-    container.appendChild(fragment);
+    container.appendChild(photosToRender);
   };
 
 
