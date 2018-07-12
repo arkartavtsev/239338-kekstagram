@@ -18,12 +18,13 @@
     photo.description = window.util.getRandomItem(DESCRIPTIONS);
   };
 
-  var generateAvatars = function (photo) {
-    photo.commentsAvatars = [];
 
-    for (var i = 0; i < photo.comments.length; i++) {
-      photo.commentsAvatars[i] = 'img/avatar-' + window.util.getRandomNum(1, AVATARS_COUNT) + '.svg';
-    }
+  var generateUrl = function () {
+    return 'img/avatar-' + window.util.getRandomNum(1, AVATARS_COUNT) + '.svg';
+  };
+
+  var generateAvatars = function (photo) {
+    photo.commentsAvatars = photo.comments.map(generateUrl);
   };
 
 

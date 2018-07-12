@@ -5,8 +5,19 @@
   var photoTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
 
 
+  var removePhoto = function (item) {
+    item.remove();
+  };
+
+  var clearGallery = function () {
+    var existingPhotos = document.querySelectorAll('.picture__link');
+
+    existingPhotos.forEach(removePhoto);
+  };
+
+
   var createAnotherPhoto = function (template, photo) {
-    var anotherPhoto = template.cloneNode(true);
+    var anotherPhoto = photoTemplate.cloneNode(true);
 
     anotherPhoto.querySelector('.picture__img').src = photo.url;
     anotherPhoto.querySelector('.picture__stat--comments').textContent = photo.comments.length;
@@ -16,14 +27,17 @@
     return anotherPhoto;
   };
 
+
   var renderPhotos = function (container, photos) {
-    var fragment = document.createDocumentFragment();
+    var addToFragment = function (fragment, photo) {
+      fragment.appendChild(createAnotherPhoto(photoTemplate, photo));
+      return fragment;
+    };
 
-    for (var i = 0; i < photos.length; i++) {
-      fragment.appendChild(createAnotherPhoto(photoTemplate, photos[i]));
-    }
+    var photosToRender = photos.reduce(addToFragment, document.createDocumentFragment());
 
-    container.appendChild(fragment);
+    clearGallery();
+    container.appendChild(photosToRender);
   };
 
 

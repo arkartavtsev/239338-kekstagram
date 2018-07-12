@@ -6,7 +6,6 @@
 
   var renderedCommentsCount = 0;
 
-
   var commentTemplate = document.querySelector('#picture').content.querySelector('.social__comment');
   var commentsCurrentCount = document.querySelector('.comments-current');
   var commentsList = document.querySelector('.social__comments');
