@@ -34,22 +34,14 @@
     sortFilters.classList.remove('img-filters--inactive');
   };
 
-  var showError = function (errorMessage) {
-    var errorContainer = document.createElement('div');
+  var showLoadError = function (errorMessage) {
+    var errorText = 'Ошибка загрузки файлов. ' + errorMessage;
 
-    var hideError = function () {
-      errorContainer.classList.add('hidden');
-    };
-
-    errorContainer.textContent = 'Ошибка загрузки файлов. ' + errorMessage;
-    errorContainer.classList.add('img-upload__message', 'img-upload__message--error');
-    document.body.appendChild(errorContainer);
-
-    setTimeout(hideError, 5000);
+    window.util.showError(errorText);
   };
 
 
-  window.backend.load(createPhotos, showError);
+  window.backend.load(createPhotos, showLoadError);
 
 
   // сортировка
