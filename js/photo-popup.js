@@ -39,7 +39,6 @@
 
     renderPopupContent(photo);
 
-    loadMoreBtn.classList.remove('hidden');
     photoPopup.classList.remove('hidden');
     pageBody.classList.add('modal-open');
 
@@ -50,6 +49,7 @@
   var closePopup = function () {
     pageBody.classList.remove('modal-open');
     photoPopup.classList.add('hidden');
+    loadMoreBtn.classList.remove('hidden');
 
     document.removeEventListener('keydown', onPopupEscPress);
     closeBtn.removeEventListener('click', closePopup);

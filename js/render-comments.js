@@ -6,6 +6,7 @@
 
   var renderedCommentsCount = 0;
 
+  var fragment = document.createDocumentFragment();
 
   var commentTemplate = document.querySelector('#picture').content.querySelector('.social__comment');
   var commentsCurrentCount = document.querySelector('.comments-current');
@@ -24,14 +25,13 @@
 
     anotherComment.appendChild(text);
 
-    return anotherComment;
+    fragment.appendChild(anotherComment);
   };
 
 
   var renderComments = function (attributes, isInitial) {
-    var fragment = document.createDocumentFragment();
-
     var lastIndex = COMMENTS_PER_PAGE;
+
     if (attributes.comments.length < COMMENTS_PER_PAGE) {
       lastIndex = attributes.comments.length;
     }
@@ -44,7 +44,7 @@
     commentsCurrentCount.textContent = renderedCommentsCount;
 
     for (var i = 0; i < lastIndex; i++) {
-      fragment.appendChild(createAnotherComment(commentTemplate, attributes.comments[i], attributes.avatars[i]));
+      createAnotherComment(commentTemplate, attributes.comments[i], attributes.avatars[i]);
     }
 
     attributes.comments.splice(0, lastIndex);
