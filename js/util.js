@@ -36,6 +36,20 @@
       }
 
       return uniqueItems;
+    },
+
+    showError: function (errorMessage) {
+      var errorContainer = document.createElement('div');
+
+      var hideError = function () {
+        errorContainer.classList.add('hidden');
+      };
+
+      errorContainer.textContent = errorMessage;
+      errorContainer.classList.add('error__message');
+      document.body.appendChild(errorContainer);
+
+      setTimeout(hideError, 5000);
     }
   };
 })();
