@@ -40,7 +40,7 @@
       errorContainer.classList.add('hidden');
     };
 
-    errorText.textContent = 'Ошибка загрузки файла. ' + errorMessage;
+    errorText.textContent = 'Ошибка загрузки файла. ' + errorMessage + '.';
 
     tryAgainBtn.addEventListener('click', onTryAgainBtnClick);
     loadNewBtn.addEventListener('click', onLoadNewBtnClick);
