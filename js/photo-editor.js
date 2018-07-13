@@ -39,7 +39,7 @@
     uploadPreview.style.transform = 'scale(' + value / 100 + ')';
   };
 
-  var onPhotoScale = function (evt) {
+  var onScaleBtnClick = function (evt) {
     var currentValue = parseInt(currentSizeField.value, 10);
 
     if (evt.target === sizeIncreaseBtn) {
@@ -117,7 +117,7 @@
   // наложение эффекта
 
 
-  var onFilterChange = function (evt) {
+  var onFilterClick = function (evt) {
     var target = evt.target;
 
     if (target === effectSelectors) {
@@ -145,16 +145,16 @@
 
 
   var addEditorHandlers = function () {
-    sizeDecreaseBtn.addEventListener('click', onPhotoScale);
-    sizeIncreaseBtn.addEventListener('click', onPhotoScale);
-    effectSelectors.addEventListener('click', onFilterChange);
+    sizeDecreaseBtn.addEventListener('click', onScaleBtnClick);
+    sizeIncreaseBtn.addEventListener('click', onScaleBtnClick);
+    effectSelectors.addEventListener('click', onFilterClick);
     effectIntensityPin.addEventListener('mousedown', onFilterPinMouseDown);
   };
 
   var removeEditorHandlers = function () {
-    sizeDecreaseBtn.removeEventListener('click', onPhotoScale);
-    sizeIncreaseBtn.removeEventListener('click', onPhotoScale);
-    effectSelectors.removeEventListener('click', onFilterChange);
+    sizeDecreaseBtn.removeEventListener('click', onScaleBtnClick);
+    sizeIncreaseBtn.removeEventListener('click', onScaleBtnClick);
+    effectSelectors.removeEventListener('click', onFilterClick);
     effectIntensityPin.removeEventListener('mousedown', onFilterPinMouseDown);
   };
 

@@ -7,31 +7,34 @@
     UPLOAD: 'https://js.dump.academy/kekstagram'
   };
 
-  var ServerCode = {
+  var ResponseCode = {
     SUCCESS: 200,
     BAD_REQUEST: 400,
     NOT_FOUND: 404,
     ENTERNAL_ERROR: 500
   };
 
+  var RESPONSE_TIMEOUT = 7000;
+
 
   var createXHR = function (onLoad, onError) {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
+    xhr.timeout = RESPONSE_TIMEOUT;
 
     xhr.addEventListener('load', function () {
       switch (xhr.status) {
-        case ServerCode.SUCCESS:
+        case ResponseCode.SUCCESS:
           onLoad(xhr.response);
           break;
-        case ServerCode.BAD_REQUEST:
+        case ResponseCode.BAD_REQUEST:
           onError('Неверный запрос');
           break;
-        case ServerCode.NOT_FOUND:
+        case ResponseCode.NOT_FOUND:
           onError('Запрашиваемый ресурс не найден');
           break;
-        case ServerCode.ENTERNAL_ERROR:
+        case ResponseCode.ENTERNAL_ERROR:
           onError('Внутренняя ошибка сервера');
           break;
         default:
@@ -49,6 +52,7 @@
 
     return xhr;
   };
+
 
   var loadData = function (onLoad, onError) {
     var xhr = createXHR(onLoad, onError);

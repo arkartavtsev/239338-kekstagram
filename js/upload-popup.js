@@ -29,7 +29,7 @@
   };
 
   var onPopupEscPress = function (evt) {
-    if (evt.keyCode === window.util.KeyCode.ESC && evt.target !== tagsField && evt.target !== descriptionField) {
+    if (evt.keyCode === window.util.keyCode.ESC && evt.target !== tagsField && evt.target !== descriptionField) {
       closeUploadPopup();
     }
   };

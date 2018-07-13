@@ -13,7 +13,7 @@
   var photos = [];
 
 
-  // отрисовка фотографий на странице
+  // выгрузка фотографий на страницу
 
 
   var preparePhotos = function (array) {
@@ -35,7 +35,7 @@
   };
 
   var showLoadError = function (errorMessage) {
-    var errorText = 'Ошибка загрузки файлов. ' + errorMessage;
+    var errorText = 'Ошибка загрузки файлов. ' + errorMessage + '.';
 
     window.util.showError(errorText);
   };
@@ -80,12 +80,13 @@
 
   var onPhotoClick = function (evt) {
     if (evt.target.classList.contains('picture__img')) {
+      evt.preventDefault();
       window.photoPopup.open(photos[evt.target.parentElement.dataset.id]);
     }
   };
 
   var onPhotoEnterPress = function (evt) {
-    if (evt.keyCode === window.util.KeyCode.ENTER && document.activeElement.classList.contains('picture__link')) {
+    if (evt.keyCode === window.util.keyCode.ENTER && document.activeElement.classList.contains('picture__link')) {
       evt.preventDefault();
       window.photoPopup.open(photos[document.activeElement.dataset.id]);
     }
