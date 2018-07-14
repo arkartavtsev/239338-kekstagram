@@ -15,20 +15,15 @@
 
   // выгрузка фотографий на страницу
 
-
-  var preparePhotos = function (array) {
-    for (var i = 0; i < array.length; i++) {
-      window.data.generateDescription(array[i]);
-      window.data.generateAvatars(array[i]);
-      array[i].id = i;
-    }
-  };
-
-
   var createPhotos = function (loadedPhotos) {
     photos = loadedPhotos;
 
-    preparePhotos(photos);
+    photos.forEach(function (photo, index) {
+      window.data.generateDescription(photo);
+      window.data.generateAvatars(photo);
+      photo.id = index;
+    });
+
     window.renderPhotos(gallery, photos);
 
     sortFilters.classList.remove('img-filters--inactive');
