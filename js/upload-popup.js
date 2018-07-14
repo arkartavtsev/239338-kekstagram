@@ -28,6 +28,7 @@
     imgToUpload.style = '';
 
     tagsField.setCustomValidity('');
+    tagsField.classList.remove('invalid-field');
   };
 
   var onPopupEscPress = function (evt) {
