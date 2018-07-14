@@ -63,7 +63,7 @@
       'sepia': 'filter: sepia(' + value / 100 + ');',
       'marvin': 'filter: invert(' + value + '%);',
       'phobos': 'filter: blur(' + value * 0.03 + 'px);',
-      'heat': 'filter: brightness(' + value * 0.03 + ');'
+      'heat': 'filter: brightness(' + (value * 0.02 + 1) + ');'
     };
 
     imgToUpload.style = effectNameToStyle[imgToUpload.dataset.currentEffect] || '';
