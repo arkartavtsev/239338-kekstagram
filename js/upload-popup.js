@@ -26,6 +26,8 @@
     imgToUpload.className = '';
     imgToUpload.dataset.currentEffect = '';
     imgToUpload.style = '';
+
+    tagsField.setCustomValidity('');
   };
 
   var onPopupEscPress = function (evt) {
